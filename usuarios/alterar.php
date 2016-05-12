@@ -346,7 +346,7 @@ o navegador deve ler (geralmente é no fim da página)
             
         
         
-        <!---
+        <!--
         A tag <form> é usada para indicarmos que dentro dela, teremos conteúdo de
         formulário
         
@@ -359,7 +359,7 @@ o navegador deve ler (geralmente é no fim da página)
         -->
         <form method ="POST" action="alterar.php?id=<?php echo $usuario['id']?>">
             
-            <!---
+            <!--
             A tag <label> é usada para exibir um texto antes de um campo, 
             para dar uma descrição do campo que o segue
             O atributo for="" indica à qual campo o label pertence
@@ -377,7 +377,7 @@ o navegador deve ler (geralmente é no fim da página)
             value=""
                 adicionar um valor ao campo
                 
-            --->
+            -->
             <label for="nome_completo">Nome Completo</label>
             <input type="text" name="nome_completo" value="<?php echo $usuario['nome_completo']?>"/>
             <br />
