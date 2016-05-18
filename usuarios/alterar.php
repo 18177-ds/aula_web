@@ -214,7 +214,7 @@ if (!isset($_GET['id'])) {
                         /**
                          * Se a query for executada com sucesso, redirecionamos
                          * para a página de listagem dos cadastros, 
-                         * enviamos junto ao link, action = 2, para
+                         * enviamos junto ao link, action = 1, para
                          * exibirmos na página de listagem que alteramos
                          * com sucesso o usuário
                          */
