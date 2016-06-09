@@ -13,18 +13,18 @@
 
 global $conecta;
 
-function conectaDB() {
+function conecta_db() {
 
     $servidor = "localhost";
     $usuario = "root";
     $senha = "root";
-    $banco_dados = "aula_web";
+    $banco_dados = "projeto";
 
     $conecta = mysql_connect($servidor, $usuario, $senha) or print (mysql_error());
     mysql_select_db($banco_dados, $conecta) or print(mysql_error());
 }
 
-function desconectaDB() {
+function desconecta_db() {
 
     mysql_close($conecta);
 }
