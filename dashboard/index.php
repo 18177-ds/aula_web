@@ -5,11 +5,10 @@ session_start();
 
 //se usuario esta logado, redireciona para a primeira página do sistema
 if(!isset($_SESSION['usuario'])){
-    header("location: ../dashboard/");
+    header("location: ../login/");
 }
 
 $usuario = $_SESSION['usuario'];
-
 
 include '../utils/bd.php';
 

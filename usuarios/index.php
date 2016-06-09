@@ -1,94 +1,107 @@
 <?php
-require '../utils/bd.php';
 
-$aviso = "";
+//iniciar sessao, necessário para manter o usuário logado
+session_start();
 
-if (isset($_GET['action'])) {
-
-    switch ($_GET['action']) {
-        case 1:
-            $aviso = "Usuário atualizado com sucesso!";
-            break;
-        case 2:
-            $aviso = "Usuário criado com sucesso!";
-            break;
-        case 3:
-            if ($_GET['status'] == 1) {
-                $aviso = "Usuário removido com sucesso!";
-            } else {
-                $aviso = "Usuário não pode ser removido!";
-            }
-            break;
-
-        default :
-            $aviso = $_GET['action'];
-    }
+//se usuario esta logado, redireciona para a primeira página do sistema
+if(!isset($_SESSION['usuario'])){
+    header("location: ../login/");
 }
 
-conectaDB();
+$usuario = $_SESSION['usuario'];
 
-$query_busca = "SELECT * FROM usuarios";
-$array_usuarios = mysql_query($query_busca);
 
-desconectaDB();
+include '../utils/bd.php';
+
+conecta_db();
+
+$query_usuarios = "SELECT * FROM usr_usuarios ORDER BY usr_id DESC";
+$res_usuarios = mysql_query($query_usuarios);
+
+desconecta_db();
+
 ?>
 
+<?php include '../layout/_header.php'; ?>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Usuários</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
 
-<html>
-    <head>
-        <title>Lista de Usuários</title>
-    </head>
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
+            
+            <a href ="criar.php" class ="btn btn-success">Novo Usuário</a>
+            
+            <div class="clearfix"/><br /></div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-users fa-fw"></i>&nbsp;Usuários
+                    
+                    
 
-    <body>
-        <a href = "criar.php">Novo Usuário</a>
-        <br />
-        <hr />
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
 
-        <?php if (!empty($aviso)): ?>
-            <h5><?php echo $aviso ?></h5>
-            <hr />
-        <?php endif; ?>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th class='center'>#</th>
+                                    <th class='center'>Nome</th>
+                                    <th class='center'>Login</th>
+                                    <th class='center'>Criado</th>
+                                    <th class='center'>Atualizado em</th>
+                                    <th class="center">Status</th>
+                                    <th class="center">Ação</th>
+                                </tr>
+                            </thead>
 
+                            <tbody>
+                                <?php if (mysql_num_rows($res_usuarios) > 0): ?>
+                                    <?php while ($row = mysql_fetch_array($res_usuarios)): ?>
+                                        <tr>
+                                            <td class='center'><?= $row['usr_id'] ?></td>
+                                            <td><?= $row['usr_nome'] ?></td>
+                                            <td><?= $row['usr_login'] ?></td>
+                                            <td class='center'><?= date('d/m/Y H:i:s', strtotime($row['usr_criado_em'])) ?></td>
+                                            <td class='center'><?= date('d/m/Y H:i:s', strtotime($row['usr_alterado_em'])) ?></td>
+                                            <td class="center">
+                                                <?= ($row['usr_ativo'] == "1"? "Ativado" : "Desativado") ?>
+                                            </td>
+                                            <td>
+                                                <a href ="alterar.php?id=<?=$row['usr_id']?>" class ="btn btn-info">
+                                                    <i class ="fa fa-edit"></i>&nbsp;Editar
+                                                </a>
+                                            
+                                                <a href ="deletar.php?id=<?=$row['usr_id']?>" class ="btn btn-danger">
+                                                    <i class ="fa fa-trash"></i>&nbsp;Apagar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="4">Sem conteúdos publicados</td>
+                                    </tr>
+                                <?php endif; ?>
 
-        <table border ="1">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Nome de Usuário</th>
-                    <th>Nome Completo </th>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                </tr>   
-            </thead>
-            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
 
-            <?php if (mysql_num_rows($array_usuarios) > 0): ?>
+                </div>
+                <!-- /.panel-body -->
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
 
-                <?php while ($usuario = mysql_fetch_array($array_usuarios)): ?>
-                    <tr>
-                        <td><?php echo $usuario['id'] ?></td>
-                        <td><?php echo $usuario['nome_usuario'] ?></td>
-                        <td><?php echo $usuario['nome_completo'] ?></td>
-                        <td>
-                            <a href="alterar.php?id=<?php echo $usuario['id'] ?>">Editar</a>
-                        </td>
-                        <td>
-                            <a href="deletar.php?id=<?php echo $usuario['id'] ?>">Remover</a>
-                        </td>
-                    </tr>   
-
-                 <?php endwhile; ?>
-
-            <?php else: ?>
-                    <tr>
-                        <td colspan="5"><b>Sem registros!</td>
-                    </tr>
-            <?php endif; ?>
-
-            </tbody>
-
-        </table>
-
-    </body>
-</html>
-
+    <?php include '../layout/_footer.php'; ?>
