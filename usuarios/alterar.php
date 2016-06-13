@@ -1,4 +1,24 @@
 <?php
+
+
+/**
+ * 
+ * Sessão é um recurso do PHP que permite que você salve valores (variáveis) 
+ * para serem usados ao longo da visita do usuário. Valores salvos na sessão
+ *  podem ser usados em qualquer parte do script, mesmo em outras páginas do 
+ * site. São variáveis que permanecem setadas até o visitante fechar o browser
+ *  ou a sessão ser destruída. 
+ * http://blog.thiagobelem.net/aprendendo-a-usar-sessoes-no-php
+ * 
+ * Verifica se usuário está logado, se não estiver, redireciona para página de login
+ */
+session_start();
+
+if(!isset($_SESSION['usuario'])){
+    header("location: ../login/");
+}
+
+
 /**
  * require é usado para tornar o conteúdo, como variáveis 
  * e funções disponíveis para esta página.
@@ -54,7 +74,7 @@ if (!isset($_GET['id'])) {
     $id = $_GET['id'];
 
     //Conectamos ao banco de Dados para ter acesso à ele
-    conectaDB();
+    conecta_db();
 
     /*     * *
      * Vamos realizar uma consulta ao banco de dados para resgatar os 
@@ -104,7 +124,7 @@ if (!isset($_GET['id'])) {
      * $qualquer_nome = $usuario['nome_da_coluna']
      * 
      */
-    $query_busca = sprintf("SELECT * FROM usuarios WHERE id = '%d'", $id);
+    $query_busca = sprintf("SELECT * FROM usr_usuarios WHERE usr_id = '%d'", $id);
     $array_usuarios = mysql_query($query_busca);
     $usuario = mysql_fetch_array($array_usuarios);
 
@@ -121,11 +141,11 @@ if (!isset($_GET['id'])) {
          * Armazenamos em variáveis os dados enviados pelo formulário
          * Para facilitar o trabalho e identificação
          */
-        $nome_completo = $_POST['nome_completo'];
-        $nome_usuario = $_POST['nome_usuario'];
-        $senha_atual = $_POST['senha_atual'];
-        $senha = $_POST['senha'];
-        $conf_senha = $_POST['conf_senha'];
+        $nome_completo = addslashes($_POST['nome_completo']);
+        $nome_usuario = addslashes($_POST['nome_usuario']);
+        $senha = addslashes($_POST['senha']);
+        $conf_senha = addslashes($_POST['conf_senha']);
+        $ativo = addslashes($_POST['ativo']);
 
 
         /*         * *
@@ -136,269 +156,180 @@ if (!isset($_GET['id'])) {
          * prosseguirmos com a alteração do usuário
          */
 
-        if (!empty($nome_completo) && !empty($nome_usuario) && !empty($senha_atual)) {
+        if (!empty($nome_completo) && !empty($nome_usuario)) {
 
-            /*             * **
-             * md5() é uma função que criptografa um texto tornando o indecifravel
-             * Para maior segurança salvamos a senha no banco de dados criptografada
-             * 
-             * Não é possivel descriptografar uma hash md5, então para comparamos
-             * a senha informada no formulário e a que está armazenada no banco, 
-             * criptografamos a recebida pelo formulário e comparamos com a armazenada
-             *
-             * 
-             * Exemplo de hash md5
-             * md5("1234") = "ab56b4d92b40713acc5af89985d4b786"
+            /**
+             * Verificamos se a nova senha esta vazia ou se a nova senha
+             * é igual à confirmação de senha
              */
+            if (empty($senha) || $senha == $conf_senha) {
 
-            if (md5($senha_atual) == $usuario['senha']) {
-
-                /**
-                 * Verificamos se a nova senha esta vazia ou se a nova senha
-                 * é igual à confirmação de senha
+                /*                     * *
+                 * O nome de usuário deve ser único, então antes de 
+                 * alterar o nome de usuário, devemos verificar se não 
+                 * existe um outro igual e que tenha id diferente do 
+                 * usuário que estamos trabalhando
                  */
-                if (empty($senha) || $senha == $conf_senha) {
+                $query_busca = sprintf("SELECT * FROM usr_usuarios WHERE usr_login LIKE '%s' AND usr_id <> %d", $nome_usuario, $id);
 
+                $array_usuarios = mysql_query($query_busca);
 
-                    /*                     * *
-                     * O nome de usuário deve ser único, então antes de 
-                     * alterar o nome de usuário, devemos verificar se não 
-                     * existe um outro igual e que tenha id diferente do 
-                     * usuário que estamos trabalhando
+                /*                     * **
+                 * mysql_num_rows($array) retorna o número de registros
+                 * da consulta realizada
+                 * 
+                 * Nesse caso, se for 0, podemos prosseguir com a 
+                 * alteração dos dados do usuário
+                 */
+                if (mysql_num_rows($array_usuarios) == 0) {
+
+                    $query_alterar = "";
+
+                    /*                         * **
+                     * Caso o usuário tenha informado uma nova senha, 
+                     * vamos atualizar ela, caso não, montamos uma 
+                     * query com atualizaçao do nome de usuario e nome
+                     * completo somente
                      */
-                    $query_busca = sprintf("SELECT * FROM usuarios WHERE nome_usuario LIKE '%s' AND id <> %d", addslashes($nome_usuario), $id);
 
-                    $array_usuarios = mysql_query($query_busca);
+                    if (!empty($senha)) {
 
-                    /*                     * **
-                     * mysql_num_rows($array) retorna o número de registros
-                     * da consulta realizada
-                     * 
-                     * Nesse caso, se for 0, podemos prosseguir com a 
-                     * alteração dos dados do usuário
-                     */
-                    if (mysql_num_rows($array_usuarios) == 0) {
-
-                        $query_alterar = "";
-
-                        /*                         * **
-                         * Caso o usuário tenha informado uma nova senha, 
-                         * vamos atualizar ela, caso não, montamos uma 
-                         * query com atualizaçao do nome de usuario e nome
-                         * completo somente
-                         */
-
-                        if (!empty($senha)) {
-
-                            $query_alterar = sprintf("UPDATE usuarios SET nome_completo = '%s', nome_usuario = '%s', senha = md5('%s')"
-                                    . " WHERE id = %d", addslashes($nome_completo), addslashes($nome_usuario), addslashes($senha), $id
-                            );
-                        } else {
-                            $query_alterar = sprintf("UPDATE usuarios SET nome_completo = '%s', nome_usuario = '%s'"
-                                    . " WHERE id = %d", addslashes($nome_completo), addslashes($nome_usuario), $id
-                            );
-                        }
-
-                        /*                         * *
-                         * Executamos o comando para alterar os dados do 
-                         * usuário e recebemos o status em uma variável, 
-                         * para sabermos se houve sucesso ou não.
-                         * 
-                         * Depois desconectamos do DB, pois não precisamos 
-                         * mais acessá-lo
-                         */
-
-                        $resultado_alterar = mysql_query($query_alterar);
-                        desconectaDB();
-
-                        /**
-                         * Se a query for executada com sucesso, redirecionamos
-                         * para a página de listagem dos cadastros, 
-                         * enviamos junto ao link, action = 1, para
-                         * exibirmos na página de listagem que alteramos
-                         * com sucesso o usuário
-                         */
-                        if ($resultado_alterar) {
-                            header("location: index.php?action=1");
-                        } else {
-                            $aviso = "Ocorreu algum problema ao atualizar o usuário, tente novamente";
-                        }
+                        $query_alterar = sprintf("UPDATE usr_usuarios SET usr_nome = '%s', usr_login = '%s',"
+                                . " usr_password = md5('%s'), usr_ativo = %d WHERE usr_id = %d",
+                                $nome_completo, $nome_usuario, $senha, $ativo, $id);
                     } else {
-                        $aviso = "Nome de usuário já existe";
+                        $query_alterar = sprintf("UPDATE usr_usuarios SET usr_nome = '%s', usr_login = '%s',"
+                                . " usr_ativo = %d WHERE id = %d", 
+                                $nome_completo, $nome_usuario, $ativo, $id);
+                    }
+
+                    /*                         * *
+                     * Executamos o comando para alterar os dados do 
+                     * usuário e recebemos o status em uma variável, 
+                     * para sabermos se houve sucesso ou não.
+                     * 
+                     * Depois desconectamos do DB, pois não precisamos 
+                     * mais acessá-lo
+                     */
+
+                    $resultado_alterar = mysql_query($query_alterar);
+                    desconecta_db();
+
+                    /**
+                     * Se a query for executada com sucesso, redirecionamos
+                     * para a página de listagem dos cadastros, 
+                     * enviamos junto ao link, action = 1, para
+                     * exibirmos na página de listagem que alteramos
+                     * com sucesso o usuário
+                     */
+                    if ($resultado_alterar) {
+                        header("location: index.php?action=2");
+                    } else {
+                        $aviso = "Ocorreu algum problema ao atualizar o usuário, tente novamente";
                     }
                 } else {
-                    $aviso = "Senhas não conferem";
+                    $aviso = "Nome de usuário já existe";
                 }
             } else {
-                $aviso = "Senha Incorreta";
+                $aviso = "Senha não conferem";
             }
         } else {
-            $aviso = "Por favor, preencha os campos Nome Completo, Nome de Usuário e Senha Atual!";
+            $aviso = "Por favor, preencha os campos Nome Completo e Nome de Usuário";
         }
     }
 }
 ?>
 
-<!---
-Aqui está o conteúdo que será exibido no navegador para quem está acessando
 
-O HTML é uma abreviação de HyperText Markup Language ou seja que em português significa, 
-Linguagem de marcação de Hipertexto. Os arquivos HTML são interpretados pelos navegadores (browsers), 
-portanto, caso você tenha algum arquivo HTML no computador, basta pedir que o seu navegador abra ele.
+<?php include '../layout/_header.php'; ?>
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Alterar Usuário</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
 
-O HTML trabalha com o sistema de tags (etiquetas). Esse sistema funciona da seguinte maneira.
-Ex: <tag>Conteúdo da tag</tag>
-
-Toda tag aberta, deve ser fechada, salvo raras exceções, nesses casos ela pode ser fechada da seguinte maneira:
-</tag>
-
-Uma tag HTML pode conter outra tag dentro dela, e quantas forem necessárias.
-<tag>
-  <outraTag>texto</outraTag>
-</tag>
-
-Read more: http://www.linhadecodigo.com.br/artigo/81/html-basico.aspx#ixzz48TIg5HOw
-
-
-Para indicarmos ao navegador que temos conteudo para ele, devemos iniciar
-com a tag <html> e esta deverá ser fechada somente ao fim de todo o conteúdo que
-o navegador deve ler (geralmente é no fim da página)
-
--->
-<html>
-
-    <!---
-    <head>...</head> contém informações que não foram ainda colocadas no nosso 
-    exemplo, a mais importante destas informações é o título da página que 
-    aparece na barra de títulos do navegador. Você dá um título a sua página, 
-    escrevendo-o dentro da tag title, como mostrado a seguir...
-    
-    Read more: http://www.maujor.com/tutorial/joe/cssjoe1.php
-    -->
-    <head>
-        <title>Novo Usuário</title>
-    </head>
-
-
-    <!---
-    Qualquer conteúdo deve ser colocado entre o par de tags<body>...</body> para que o navegador possa renderizá-lo.
-    
-    Read more: http://www.maujor.com/tutorial/joe/cssjoe1.php
-
-    -->
-    <body>
-
-        <!--
-        Tag <a href="link_para_ir">Texto de Exibição do Link</a>
-        No exemplo abaixo, o link redirecionará para a página index.php
-        O texto entre as tags, será o que vai ser exibido para o navegador
-        -->
-
-        <a href = "index.php">Ir para Lista</a>
-
-        <!--
-        Tag <br /> realiza uma quebra de linha no conteúdo
-        Tag <br /> realiza uma quebra de linha no conteúdo, exibindo uma linha
-        -->
-        <br />
-        <hr />
-
-
-        <!---
-        Aqui temos a mistura de PHP com HTML pois o nosso conteúdo é dinamico
-        Sempre que precisarmos adicionar um código PHP no conteúdo HTML, 
-        devemos colocar todo o código PHP entre as tags <?php echo "<?php ?>" ?>
-        O conteúdo da TAG pode ocupar inúmeras linhas, sem causar problemas.
-        
-        Mas é recomendado deixar o conteúdo de PHP e HTML separados, 
-        para facilitar a leitura do código e não bagunçar, 
-        
-        recomenda se usar PHP junto ao HTML somente em casos de condicionais, 
-        laços e exibição de conteúdo dinâmico
-        
-        No exemplo abaixo, abrimos a TAG PHP para verificar sem existe algum 
-        aviso para exibir no navegador
-        
-        $aviso já foi definido no topo do arquivo, onde faziamos as validações
-        Caso tenha alguma mensagem nele, sera exibido para o navegador dentro da
-        tag h5, que deixa o conteúdo com uma formatação diferente do texto normal
-        
-        utilizamos o caracter ":" para indicar que ali começa o conteudo do 
-        if caso verdadeiro
-        
-        para indicarmos o fim do if, utilzamos a palavra chave endif;
-        
-        -->
-<?php if (!empty($aviso)): ?>
-            <h5><?php echo $aviso ?></h5>
-            <hr />
-<?php endif; ?>
-
-
-
-        <!--
-        A tag <form> é usada para indicarmos que dentro dela, teremos conteúdo de
-        formulário
-        
-        São necessários alguns atributos, como o tipo de envio dos dados e para 
-        onde esses dados vão, são eles:
-        
-        method="", podem ser usados os valores POST ou GET
-        action="", arquivo para o qual serão enviados os dados e processados
-        
-        -->
-        <form method ="POST" action="alterar.php?id=<?php echo $usuario['id'] ?>">
-
-            <!--
-            A tag <label> é usada para exibir um texto antes de um campo, 
-            para dar uma descrição do campo que o segue
-            O atributo for="" indica à qual campo o label pertence
+    <!-- /.row -->
+    <div class="row">
+        <div class="col-lg-12">
             
-            a tag <input> é usada para indicar um campo onde devera ser inserido
-            informações, que podem ser pelo usuario ou pelo proprio sistema
-            
-            atributos:
-            type="" 
-                indica o tipo de campo que deve ser, texto(text), 
-                senha(password), entre outros...
-            name="" 
-                indica o nome que será passado para a action no formulário, 
-                o nome que poderá ser resgatado via POST ou GET
-            value=""
-                adicionar um valor ao campo
-                
-            -->
-            <label for="nome_completo">Nome Completo</label>
-            <input type="text" name="nome_completo" value="<?php echo $usuario['nome_completo'] ?>"/>
-            <br />
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Formulário de Usuário
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-7 col-md-offset-1 col-sm-12 col-sm-offset-0">
+                            <form class='form-horizontal' method="POST" action="alterar.php?id=<?=$usuario['usr_id']?>">
+                                
+                                <?php if(!empty($aviso)):?>
+                                    <div class="alert alert-danger"><?=$aviso?>></div>
+                                <?php endif;?>
+                                    
+                                <div class="form-group">
+                                    
+                                    <label for='nome_completo' class="col-md-2 control-label">Nome Completo</label>
+                                    <div class='col-md-9 col-sm-12'>
+                                        <input class="form-control" name="nome_completo" type="text" value="<?=$usuario['usr_nome']?>">
+                                    </div>
+                                </div>
+                                    
+                                <div class="form-group">
+                                    
+                                    <label for='nome_usuario' class="col-md-2 control-label">Nome de Usuário</label>
+                                    <div class='col-md-9 col-sm-12'>
+                                        <input class="form-control" name="nome_usuario" type="text" value="<?=$usuario['usr_login']?>">
+                                    </div>
+                                </div>
+                                    
+                                <div class="form-group">
+                                    
+                                    <label for='senha' class="col-md-2 control-label">Senha</label>
+                                    <div class='col-md-9 col-sm-12'>
+                                        <input class="form-control" name="senha" type="password">
+                                    </div>
+                                </div>
+                                    
+                                    
+                                <div class="form-group">
+                                    
+                                    <label for='conf_senha' class="col-md-2 control-label">Confirme a Senha</label>
+                                    <div class='col-md-9 col-sm-12'>
+                                        <input class="form-control" name="conf_senha" type="password">
+                                    </div>
+                                </div>
+                                    
+                                <div class="form-group">
+                                    <label for='ativo' class="col-md-2 control-label">Status</label>
+                                    <div class='col-md-9 col-sm-12'>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="ativo" id="ativo1" value="1" <?=($usuario['usr_ativo'] == 1? "checked": "")?>>&nbsp;Ativado
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="ativo" id="ativo2" value="0" <?=($usuario['usr_ativo'] == 0? "checked": "")?>>&nbsp;Desativado
+                                        </label>
+                                    </div>
+                                </div>
+                                   
+                                                               
+                                <div class='clear'>&nbsp;</div>
+                                <div class='form-group'>
+                                    <div class='col-md-offset-2 col-md-10 col-sm-offset-0 col-sm-12'>
+                                        <button type="submit" class="btn btn-success">Cadastrar</button>
+                                        <button type="reset" class="btn btn-info">Limpar os Dados</button>
+                                     </div>
+                                </div>
+                            </form>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
 
-            <label for="nome_usuario">Nome de Usuário</label>
-            <input type="text" name="nome_usuario" value="<?php echo $usuario['nome_usuario'] ?>"/>
-            <br />
+    <?php include '../layout/_footer.php'; ?>
 
-            <label for="senha_atual">Senha</label>
-            <input type="password" name="senha_atual"/>
-            <br />
-
-            <label for="senha">Nova Senha</label>
-            <input type="password" name="senha"/>
-            <br />
-
-            <label for="conf_senha">Confirme a nova Senha</label>
-            <input type="password" name="conf_senha"/>
-            <br />
-
-            <!--
-            a tag <input type="reset"> é usada para apagar todos os campos do 
-            formulário
-            
-            a tag <input type="submit"> é usada para enviar o formulario
-            O atributo value="" é usado para indicar o texto a ser exibido
-            
-            -->
-
-            <input type ="reset" value="Limpar os Dados"/>
-            <input type="submit" value ="Alterar Usuário" />
-        </form>
-    </body>
-</html>

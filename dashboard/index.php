@@ -30,6 +30,7 @@ $query_conteudos = "SELECT"
             . " con.con_id AS con_id,"
             . " con.con_titulo AS con_titulo,"
             . " con.con_criado_em AS con_criado_em,"
+            . " con.con_alterado_em AS con_alterado_em,"
             . " cat.cat_titulo AS cat_titulo,"
             . " usr.usr_nome AS usr_nome"
         . " FROM con_conteudos AS con"
@@ -146,7 +147,8 @@ desconecta_db();
                                             <th class='center'>Título</th>
                                             <th class='center'>Categoria</th>
                                             <th class='center'>Autor</th>
-                                            <th class='center'>Criado em<th>
+                                            <th class='center'>Criado em</th>
+                                            <th class='center'>Atualizado em<th>
                                         </tr>
                                     </thead>
                                     
@@ -159,6 +161,7 @@ desconecta_db();
                                                     <td><?=$row['cat_titulo']?></td>
                                                     <td><?=$row['usr_nome']?></td>
                                                     <td class='center'><?=date('d/m/Y H:i:s',strtotime($row['con_criado_em']))?></td>
+                                                    <td class='center'><?= date('d/m/Y H:i:s', strtotime($row['con_alterado_em'])) ?></td>
                                                 </tr>
                                             <?php endwhile;?>
                                         <?php else:?>

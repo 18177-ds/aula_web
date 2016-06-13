@@ -31,6 +31,12 @@ $res_categorias = mysql_query($query_categorias);
 
 desconecta_db();
 
+$action = 0;
+
+if(isset($_GET['action'])){
+    $action = $_GET['action'];
+}
+
 ?>
 
 <?php include '../layout/_header.php'; ?>
@@ -47,14 +53,23 @@ desconecta_db();
     <div class="row">
         <div class="col-lg-12">
             
+            <?php if($action == 1):?>
+                <div class="alert alert-success">Categoria cadastrada com sucesso</div>
+            <?php elseif($action == 2):?>
+                <div class="alert alert-success">Categoria alterada com sucesso</div>
+            <?php elseif($action == 3):?>
+                <div class="alert alert-success">Categoria removida com sucesso</div>
+            <?php elseif($action == 4):?>
+                <div class="alert alert-danger">Categoria não pode ser removida</div>
+            <?php endif;?>
+        
+            
             <a href ="criar.php" class ="btn btn-success">Nova categoria</a>
             
             <div class="clearfix"/><br /></div>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-list fa-fw"></i>&nbsp;Categorias
-                    
-                    
 
                 </div>
                 <!-- /.panel-heading -->

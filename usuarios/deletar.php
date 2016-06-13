@@ -1,24 +1,43 @@
 <?php
 
+
+//iniciar sessao, necessário para manter o usuário logado
+session_start();
+
+//se usuario esta logado, redireciona para a primeira página do sistema
+if(!isset($_SESSION['usuario'])){
+    header("location: ../login/");
+}
+
+$usr_id = 0;
+
+if(!isset($_GET['id'])){
+    header("location: index.php");
+}
+
+$usr_id = intval($_GET['id']);
+
 require '../utils/bd.php';
 
-if (!isset($_GET['id'])) {
-    header("location: index.php");
-} else {
+conecta_db();
 
-    conectaDB();
+$query_busca = sprintf("SELECT * FROM usr_usuarios WHERE usr_id = %d", $usr_id);
+$res_busca = mysql_query($query_busca);
 
-    $id = $_GET['id'];
-
-    $query_remover = sprintf("DELETE FROM usuarios WHERE id = '%d'", $id);
-    $resultado_remover = mysql_query($query_remover);
-
-    desconectaDB();
-
-    if ($resultado_remover) {
-        header("location: index.php?action=3&status=1");
-    } else {
-        header("location: index.php?action=3&status=0");
-    }
+if(mysql_num_rows($res_busca) < 1){
+    header("location: index.php?action=4");
 }
+
+$query_apagar = sprintf("DELETE FROM usr_usuarios WHERE usr_id = '%d'", $usr_id);
+
+$resultado_apagar = mysql_query($query_apagar);
+
+desconecta_db();
+
+if($resultado_apagar) {
+    header("location: index.php?action=3");
+} else {
+    header("location: index.php?action=4");
+}
+
 ?>

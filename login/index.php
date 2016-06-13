@@ -29,7 +29,8 @@ if (isset($_POST['login'])) {
         conecta_db();
 
         //buscar usuário pelo email no banco
-        $query_busca = sprintf("SELECT * FROM usr_usuarios WHERE usr_login LIKE '%s' AND usr_password LIKE '%s'", $login, md5($senha));
+        $query_busca = sprintf("SELECT * FROM usr_usuarios WHERE usr_login LIKE '%s' AND usr_password LIKE '%s' AND usr_ativo = 1", 
+                $login, md5($senha));
         $array_usuarios = mysql_query($query_busca);
 
         //se retornar resultados
