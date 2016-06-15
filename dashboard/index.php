@@ -16,15 +16,18 @@ conecta_db();
 
 $query_num_cat = "SELECT COUNT(*) as total FROM cat_categorias";
 $res_num_cat = mysql_query($query_num_cat);
-$num_cat = mysql_fetch_array($res_num_cat)['total'];
+$num_cat = mysql_fetch_array($res_num_cat);
+$num_cat = $num_cat[0];
 
 $query_num_con = "SELECT COUNT(*) as total FROM con_conteudos";
 $res_num_con = mysql_query($query_num_con);
-$num_con = mysql_fetch_array($res_num_con)['total'];
+$num_con = mysql_fetch_array($res_num_con);
+$num_con = $num_con[0];
 
 $query_num_usr = "SELECT COUNT(*) as total FROM usr_usuarios";
 $res_num_usr = mysql_query($query_num_usr);
-$num_usr = mysql_fetch_array($res_num_usr)['total'];
+$num_usr = mysql_fetch_array($res_num_usr);
+$num_usr = $num_usr[0];
 
 $query_conteudos = "SELECT"
             . " con.con_id AS con_id,"
