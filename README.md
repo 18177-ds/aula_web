@@ -70,23 +70,31 @@
     <b>categorias: </b> Tem quatro arquivos:
     <ul>
         <li>
-            <b>index.php: </b> Exibe um botão para criar uma nova categoria e lista as categorias cadastradas, com botões de açao para editar e remover cada categoria 
+            <p>
+                <b>index.php: </b> Exibe um botão para criar uma nova categoria e lista as categorias cadastradas, com botões de açao para editar e remover cada categoria 
+            </p>
         </li>
 
         <li>
-            <b>criar.php: </b> Formulário para cadastrar uma categoria, ao enviar o formulário, ele verifica os campos, cadastra a categoria e redireciona para
+            <p>
+                <b>criar.php: </b> Formulário para cadastrar uma categoria, ao enviar o formulário, ele verifica os campos, cadastra a categoria e redireciona para
                 a listagem de categorias, caso não consiga cadastrar, exibe uma memnsagem de erro na página
+            </p>
         </li>
 
         <li>
-            <b>alterar.php: </b> Formulário de uma categoria com os dados cadastrados, ao enviar o formulário, ele verifica os campos, altera a categoria e redireciona para
+            <p>
+                <b>alterar.php: </b> Formulário de uma categoria com os dados cadastrados, ao enviar o formulário, ele verifica os campos, altera a categoria e redireciona para
                 a listagem de categorias, caso não consiga alterar, exibe uma mensagem de erro na página
+            </p>
         </li>
 
         <li>
-            <b>deletar.php: </b> Açao para remover uma categoria, verifica se existe a categoria informada pelo id e apaga ela, depois redireciona para a listagem,
+            <p>
+                <b>deletar.php: </b> Açao para remover uma categoria, verifica se existe a categoria informada pelo id e apaga ela, depois redireciona para a listagem,
                 caso nao exista a categoria ou não consiga remover, ele redireciona para a listagem com uma mensagem de erro. Não é possível remover uma categoria
                 que tenha um conteudo vinculado a ela.
+            </p>
         </li>
     </ul>
 <p>
