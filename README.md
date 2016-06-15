@@ -50,12 +50,8 @@
 <p>
     <b>login: </b> Tem dois arquivos:
     <ul>
-        <li>
-            <b>index.php: </b>é a página de login, recebe os dados do formulário, verifica se não estão vazios, depois verifica se existe um 
-            usuário ativo com a senha e login informados, se existir, salva os dados do usuario em uma variável de sessão e redireciona para o dashboard,
-            se não existir, retorna uma mensagem para a página de login
+        <li><b>index.php: </b>é a página de login, recebe os dados do formulário, verifica se não estão vazios, depois verifica se existe um usuário ativo com a senha e login informados, se existir, salva os dados do usuario em uma variável de sessão e redireciona para o dashboard,se não existir, retorna uma mensagem para a página de login
         </li>
-
         <li>
             <b>logout.php: </b> limpa os dados da sessão criada, proibindo o acesso ao sistema sem logar novamente
         </li>
@@ -74,21 +70,18 @@
                 <b>index.php: </b> Exibe um botão para criar uma nova categoria e lista as categorias cadastradas, com botões de açao para editar e remover cada categoria 
             </p>
         </li>
-
         <li>
             <p>
                 <b>criar.php: </b> Formulário para cadastrar uma categoria, ao enviar o formulário, ele verifica os campos, cadastra a categoria e redireciona para
                 a listagem de categorias, caso não consiga cadastrar, exibe uma memnsagem de erro na página
             </p>
         </li>
-
         <li>
             <p>
                 <b>alterar.php: </b> Formulário de uma categoria com os dados cadastrados, ao enviar o formulário, ele verifica os campos, altera a categoria e redireciona para
                 a listagem de categorias, caso não consiga alterar, exibe uma mensagem de erro na página
             </p>
         </li>
-
         <li>
             <p>
                 <b>deletar.php: </b> Açao para remover uma categoria, verifica se existe a categoria informada pelo id e apaga ela, depois redireciona para a listagem,
@@ -105,17 +98,14 @@
         <li>
             <b>index.php: </b> Exibe um botão para criar um novo conteudo e lista os conteudos cadastrados, com botões de açao para editar e remover cada conteudo 
         </li>
-
         <li>
             <b>criar.php: </b> Formulário para cadastrar um conteudos, ao enviar o formulário, ele verifica os campos, cadastro o conteudo e redireciona para
                 a listagem de conteudos, caso não consiga cadastrar, exibe uma memnsagem de erro na página
         </li>
-
         <li>
             <b>alterar.php: </b> Formulário de um conteudos com os dados cadastrados, ao enviar o formulário, ele verifica os campos, altera o conteudo e redireciona para
                 a listagem de conteudos, caso não consiga alterar, exibe uma mensagem de erro na página
         </li>
-
         <li>
             <b>deletar.php: </b> Açao para remover um conteudo, verifica se existe o conteudo informado pelo id e apaga ele, depois redireciona para a listagem,
                 caso nao exista o conteudo ou não consiga remover, ele redireciona para a listagem com uma mensagem de erro
@@ -129,17 +119,14 @@
         <li>
             <b>index.php: </b> Exibe um botão para criar um novo usuario e lista os usuarios cadastrados, com botões de açao para editar e remover cada usuario 
         </li>
-
         <li>
             <b>criar.php: </b> Formulário para cadastrar um usuario, ao enviar o formulário, ele verifica os campos, cadastro o usuario e redireciona para
                 a listagem de usuarios, caso não consiga cadastrar, exibe uma memnsagem de erro na página
         </li>
-
         <li>
             <b>alterar.php: </b> Formulário de um usuario com os dados cadastrados, ao enviar o formulário, ele verifica os campos, altera o usuario e redireciona para
                 a listagem de usuarios, caso não consiga alterar, exibe uma mensagem de erro na página
         </li>
-
         <li>
             <b>deletar.php: </b> Açao para remover um usuario, verifica se existe o usuario informado pelo id e apaga ele, depois redireciona para a listagem,
                 caso nao exista o usario ou não consiga remover, ele redireciona para a listagem com uma mensagem de erro. Não é possível remover um usuário
@@ -147,9 +134,6 @@
         </li>
     </ul>
 <p>
-
-
-
 
 <h1>Diretórios</h1>
 <ul>
