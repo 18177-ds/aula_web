@@ -55,7 +55,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `projeto`.`con_conteudos` (
   `con_id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `con_titulo` VARCHAR(100) NOT NULL COMMENT '',
-  `con_descricao` VARCHAR(100) NOT NULL COMMENT '',
+  `con_descricao` VARCHAR(1024) DEFAULT "" NOT NULL COMMENT '',
   `con_corpo` LONGTEXT NOT NULL COMMENT '',
   `con_ativo` TINYINT(1) NOT NULL DEFAULT 1 COMMENT '',
   `con_criado_em` TIMESTAMP NOT NULL COMMENT '',

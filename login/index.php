@@ -32,6 +32,9 @@ if (isset($_POST['login'])) {
         $query_busca = sprintf("SELECT * FROM usr_usuarios WHERE usr_login LIKE '%s' AND usr_password LIKE '%s' AND usr_ativo = 1", 
                 $login, md5($senha));
         $array_usuarios = mysql_query($query_busca);
+        
+        //desconecta do banco
+        desconecta_db();
 
         //se retornar resultados
         if (mysql_num_rows($array_usuarios) == 1) {
@@ -42,9 +45,6 @@ if (isset($_POST['login'])) {
         } else {
             $aviso_erro = "Login ou senha inválidos!";
         }
-        
-       //desconectar do banco
-        desconecta_db();
 
     } else {
         $aviso_erro = "Por favor, preencha todos os campos!";
