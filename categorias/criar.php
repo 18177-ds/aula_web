@@ -81,7 +81,7 @@ if (isset($_POST['titulo'])) {
                                     <label for='ativo' class="col-md-2 control-label">Status</label>
                                     <div class='col-md-9 col-sm-12'>
                                         <label class="radio-inline">
-                                            <input type="radio" name="ativo" id="ativo1" value="1">&nbsp;Ativo
+                                            <input type="radio" name="ativo" id="ativo1" value="1">&nbsp;Ativada
                                         </label>
                                         <label class="radio-inline">
                                             <input type="radio" name="ativo" id="ativo2" value="0" checked>&nbsp;Desativada

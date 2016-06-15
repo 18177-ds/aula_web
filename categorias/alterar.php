@@ -100,7 +100,7 @@ desconecta_db();
                                     <div class='col-md-9 col-sm-12'>
                                         <label class="radio-inline">
                                             <input type="radio" name="ativo" id="ativo1" value="1" 
-                                                <?=($categoria['cat_ativo'] == 1? "checked": "")?>>&nbsp;Ativo
+                                                <?=($categoria['cat_ativo'] == 1? "checked": "")?>>&nbsp;Ativada
                                         </label>
                                         <label class="radio-inline">
                                             <input type="radio" name="ativo" id="ativo2" value="0" 
@@ -112,7 +112,7 @@ desconecta_db();
                                 <div class='clear'>&nbsp;</div>
                                 <div class='form-group'>
                                     <div class='col-md-offset-2 col-md-10 col-sm-offset-0 col-sm-12'>
-                                        <button type="submit" class="btn btn-success">Cadastrar</button>
+                                        <button type="submit" class="btn btn-success">Alterar</button>
                                         <button type="reset" class="btn btn-info">Limpar os Dados</button>
                                      </div>
                                 </div>

@@ -317,7 +317,7 @@ if (!isset($_GET['id'])) {
                                 <div class='clear'>&nbsp;</div>
                                 <div class='form-group'>
                                     <div class='col-md-offset-2 col-md-10 col-sm-offset-0 col-sm-12'>
-                                        <button type="submit" class="btn btn-success">Cadastrar</button>
+                                        <button type="submit" class="btn btn-success">Alterar</button>
                                         <button type="reset" class="btn btn-info">Limpar os Dados</button>
                                      </div>
                                 </div>

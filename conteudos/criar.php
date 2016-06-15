@@ -104,7 +104,7 @@ desconecta_db();
                                     
                                     <label for='descricao' class="col-md-2 control-label">Descricao</label>
                                     <div class='col-md-9 col-sm-12'>
-                                        <input class="form-control" name="descricao" type="text">
+                                        <textarea class="form-control" name="descricao" rows="5"></textarea>
                                     </div>
                                 </div>
                                     

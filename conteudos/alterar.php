@@ -126,7 +126,7 @@ desconecta_db();
                                     
                                     <label for='descricao' class="col-md-2 control-label">Descricao</label>
                                     <div class='col-md-9 col-sm-12'>
-                                        <input class="form-control" name="descricao" type="text" value="<?=$conteudo['con_descricao']?>">
+                                        <textarea class="form-control" name="corpo" rows="5"><?=$conteudo['con_descricao']?></textarea>
                                     </div>
                                 </div>
                                     
@@ -154,7 +154,7 @@ desconecta_db();
                                 <div class='clear'>&nbsp;</div>
                                 <div class='form-group'>
                                     <div class='col-md-offset-2 col-md-10 col-sm-offset-0 col-sm-12'>
-                                        <button type="submit" class="btn btn-success">Cadastrar</button>
+                                        <button type="submit" class="btn btn-success">Alterar</button>
                                         <button type="reset" class="btn btn-info">Limpar os Dados</button>
                                      </div>
                                 </div>
