@@ -126,7 +126,7 @@ desconecta_db();
                                     
                                     <label for='descricao' class="col-md-2 control-label">Descricao</label>
                                     <div class='col-md-9 col-sm-12'>
-                                        <textarea class="form-control" name="corpo" rows="5"><?=$conteudo['con_descricao']?></textarea>
+                                        <textarea class="form-control" name="descricao" rows="5"><?=$conteudo['con_descricao']?></textarea>
                                     </div>
                                 </div>
                                     
